@@ -1,0 +1,103 @@
+name: OpenWrt-CI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+
+  build_firmware:
+
+    name: Build Firmware
+
+    runs-on: ubuntu-latest
+
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Space cleanup
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          if [ -f "u-boot" ];then
+            rm -rf ./u-boot/*
+          fi
+
+          if [ -f "armv7-lpae-multiplatform" ];then
+            rm -rf ./armv7-lpae-multiplatform/*
+          fi
+
+          if [ ! -d "bootloader" ];then
+            mkdir bootloader
+          else 
+            rm -rf bootloader
+            mkdir bootloader
+          fi
+
+          if [ ! -d "kernelfile" ];then
+            mkdir kernelfile
+          else 
+            rm -rf kernelfile
+            mkdir kernelfile
+          fi
+
+# 设置交叉编译器
+
+          sudo apt-get update
+          sudo apt install gcc-arm-linux-gnueabihf
+
+          export ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+
+# U-Boot
+
+          sudo apt install bison flex swig
+          git clone -b v2022.04-rc1 https://github.com/u-boot/u-boot/ --depth=1
+          cd u-boot
+
+# 编译U-Boot
+
+          make distclean
+          make stm32mp15_basic_defconfig
+          make DEVICE_TREE=stm32mp157a-dk1 all -j $(nproc)
+
+# 拷贝启动文件
+
+          cp ./u-boot-spl.stm32 ../bootloader/u-boot-spl.stm32
+          cp ./u-boot.img ../bootloader/u-boot.img
+
+          cd ..
+          rm -rf u-boot
+
+# Linux Kernel
+
+          sudo apt-get install lzop lzma libmpc-dev u-boot-tools libncurses5-dev
+
+          git clone https://github.com/RobertCNelson/armv7-lpae-multiplatform
+          cd armv7-lpae-multiplatform/
+          git checkout origin/v5.16.x -b tmp
+          sed -i "s/git.kernel.org\/pub\/scm\/linux\/kernel\/git\/stable/mirrors.tuna.tsinghua.edu.cn\/git/g" ./scripts/git.sh
+          ./build_kernel.sh
+
+          export kernel_version=5.16.9-armv7-lpae-x13
+
+          sudo cp ./deploy/${kernel_version}.zImage ../kernelfile/${kernel_version}.zImage
+          sudo cp ./deploy/${kernel_version}-dtbs.tar.gz ../kernelfile/${kernel_version}-dtbs.tar.gz
+          sudo cp ./deploy/${kernel_version}-modules.tar.gz ../kernelfile/${kernel_version}-modules.tar.gz
+
+          cd ..
+          rm -rf armv7-lpae-multiplatform
+
+      - name: Upload release asset
+        if: github.event == 'release'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.YOURTOKEN }}
+          file: ./artifact/firmware/*
+          tag: ${{ github.ref }}
+          file_glob: true

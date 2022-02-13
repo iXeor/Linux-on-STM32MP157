@@ -56,26 +56,22 @@ jobs:
             mkdir kernelfile
           fi
 
-# 设置交叉编译器
 
           sudo apt-get update
           sudo apt install gcc-arm-linux-gnueabihf
 
           export ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
 
-# U-Boot
 
           sudo apt install bison flex swig
           git clone -b v2022.04-rc1 https://github.com/u-boot/u-boot/ --depth=1
           cd u-boot
 
-# 编译U-Boot
 
           make distclean
           make stm32mp15_basic_defconfig
           make DEVICE_TREE=stm32mp157a-dk1 all -j $(nproc)
 
-# 拷贝启动文件
 
           cp ./u-boot-spl.stm32 ../bootloader/u-boot-spl.stm32
           cp ./u-boot.img ../bootloader/u-boot.img
@@ -83,7 +79,6 @@ jobs:
           cd ..
           rm -rf u-boot
 
-# Linux Kernel
 
           sudo apt-get install lzop lzma libmpc-dev u-boot-tools libncurses5-dev
 

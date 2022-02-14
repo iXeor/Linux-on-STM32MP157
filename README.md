@@ -1,4 +1,4 @@
-# Linux-on-STM32MP157
+# Linux-on-STM32MP157(Ubuntu)
 
 - Here is a Github Action Project to Generate the file that need to copy to SD Card for STM32MP157 (Specially on STM32MP157-DK1)
 - Honestly say,I may update this project slowly because I have lots of works to do.

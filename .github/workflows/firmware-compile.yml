@@ -17,13 +17,13 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
+    
+      - name: Fix up git URLs
+        run: |
+         git config --global --add url."https://${{ secrets.GITHUB_SECRET }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+         git config --global --add url."https://${{ secrets.GITHUB_SECRET }}:x-oauth-basic@github.com/".insteadOf "git@github.com:"
 
-      - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          ref: master
-          submodules: true
-          token: ${{ secrets.CI_TOKEN }}
+
         
 
         

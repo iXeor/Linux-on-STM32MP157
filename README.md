@@ -5,7 +5,7 @@
 
 ## Special Thanks:
 - armv7-lpae-multiplatform by [@Robert Nelson](https://github.com/RobertCNelson)
-- Linux Kernel by [@Linus Torvalds](https://github.com/torvalds) and all people that supports Linux's Development
+- Linux Kernel by [@Linus Torvalds](https://github.com/torvalds) and all guys that supports Linux's Development
 - Ubuntu Minimal armhf 20.04 from [rcm-ee](https://rcn-ee.com/)
 
 ## Current State:

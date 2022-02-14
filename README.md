@@ -29,3 +29,13 @@
 | Hard Disk 1 | PNY CS3030 (1TB SSD) |
 | Graphic Card 0 |  Intel HD Graphics 620 (reserve 2 GB memory) |
 | Graphic Card 1 | NVIDIA MX 150 4GB |
+
+## Github Actions Environment:
+
+| Specifications | more information |
+| -------- | ------------------------------------------------------------ |
+| runs-on | ubuntu-latest |
+| Dependencies (apt installed) | bison flex swig lzop lzma libmpc-dev u-boot-tools libncurses5-dev build-essential asciidoc binutils bzip2 gawk gettext git libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion uglifyjs p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf |
+| Cross Compiler (for U-Boot) | gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf |
+| Cross Compiler (for Kernel) | gcc-11.1.0-nolibc-arm-linux-gnueabi |
+| Current Selected Kernel Version | 5.16.9-armv7-lpae-x13 |

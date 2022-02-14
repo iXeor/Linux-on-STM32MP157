@@ -2,7 +2,7 @@ name: Firmwire-CI
 
 on:
   schedule:
-    - cron: 0 20 * * *
+    - cron: 0 1 * * *
   release:
     types: [published]
 

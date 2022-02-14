@@ -118,6 +118,7 @@ jobs:
         run: |
           cd rootfs
           wget -c https://rcn-ee.com/rootfs/eewiki/minfs/ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
+          tar xf ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
 
       - name: Upload release asset
         if: github.event == 'release'

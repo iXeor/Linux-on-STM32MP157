@@ -2,7 +2,7 @@ name: Firmwire-CI
 
 on:
   schedule:
-    - cron: 30 7 * * *
+    - cron: 0 8 * * *
   release:
     types: [published]
 
@@ -91,7 +91,7 @@ jobs:
           git clone https://github.com/RobertCNelson/armv7-lpae-multiplatform
           cd armv7-lpae-multiplatform/
           git checkout origin/v5.16.x -b tmp
-          sed -i "s/git.kernel.org\/pub\/scm\/linux\/kernel\/git\/stable/mirrors.tuna.tsinghua.edu.cn\/git/g" ./scripts/git.sh
+          
           ./build_kernel.sh
 
           export kernel_version=5.16.9-armv7-lpae-x13

@@ -114,7 +114,7 @@ jobs:
           cd ..
           rm -rf armv7-lpae-multiplatform
 
-      - name: rootfs(Ubuntu-minimal) Download
+      - name: rootfs(Ubuntu-minimal) Preparation
         run: |
           cd rootfs
           wget -c https://rcn-ee.com/rootfs/eewiki/minfs/ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz

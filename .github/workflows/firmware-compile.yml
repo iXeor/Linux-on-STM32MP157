@@ -19,10 +19,14 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
         with:
           ref: master
+          submodules: true
+          token: ${{ secrets.CI_TOKEN }}
+        
 
+        
       - name: Space cleanup
         env:
           DEBIAN_FRONTEND: noninteractive

@@ -12,8 +12,8 @@
 ## Current State:
 |Tasks|State|
 | ----- | ----- |
-| Github Action Script | Unfinished |
-| Shell Script | Unfinished |
+| Github Action Script | Image Generator Part Unfinished |
+| Shell Script | Image Generator Part & README Unfinished |
 
 ## Shell Script Test Environment:
 | Specifications | more information |

@@ -2,7 +2,7 @@ name: Firmwire-CI
 
 on:
   schedule:
-    - cron: 0 13 * * *
+    - cron: 0 14 * * *
   release:
     types: [published]
 
@@ -98,6 +98,7 @@ jobs:
 
       - name: Kernel Compile
         run: |
+          export TERM=xterm
           git clone https://github.com/RobertCNelson/armv7-lpae-multiplatform
           cd armv7-lpae-multiplatform/
           git checkout origin/v5.16.x -b tmp

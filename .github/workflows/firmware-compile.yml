@@ -25,18 +25,7 @@ jobs:
          git config --global --add url."https://${{ secrets.GITHUB_SECRET }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
          git config --global --add url."https://${{ secrets.GITHUB_SECRET }}:x-oauth-basic@github.com/".insteadOf "git@github.com:"
         
-      - name: Container Init
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          docker rmi `docker images -q`
-          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d /usr/local/lib/android
-          sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* adoptopenjdk* mysql* php* mongodb* dotnet* moby* snapd* || true
-          sudo -E apt-get update
-          sudo -E apt-get -fy install bison flex swig lzop lzma libmpc-dev u-boot-tools libncurses5-dev build-essential asciidoc binutils bzip2 gawk gettext git libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion uglifyjs p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf
-          sudo -E apt-get -y autoremove --purge
-          sudo -E apt-get clean
-          df -h
+
           
       - name: Generate artifact Path
         run: |
@@ -47,16 +36,18 @@ jobs:
           
       - name: Path Init
         run: |
+          cd ./artifact
+          
           if [ ! -d "bootloader" ];then
-            mkdir ./bootloader
+            mkdir bootloader
           fi
 
           if [ ! -d "kernelfile" ];then
-            mkdir ./kernelfile
+            mkdir kernelfile
           fi
 
           if [ ! -d "rootfs" ];then
-            mkdir ./rootfs
+            mkdir rootfs
           fi
           
           ls -l
@@ -80,8 +71,8 @@ jobs:
 
       - name: Copy U-Boot files
         run: |
-          cp ./u-boot-spl.stm32 ../bootloader/u-boot-spl.stm32
-          cp ./u-boot.img ../bootloader/u-boot.img
+          cp ./u-boot-spl.stm32 ./artifact/bootloader/u-boot-spl.stm32
+          cp ./u-boot.img ./artifact/bootloader/u-boot.img
 
           cd ..
           rm -rf ./u-boot
@@ -99,16 +90,16 @@ jobs:
           
       - name: Copy Kernel Files
         run: |
-          sudo cp ./deploy/${kernel_version}.zImage ../kernelfile/${kernel_version}.zImage
-          sudo cp ./deploy/${kernel_version}-dtbs.tar.gz ../kernelfile/${kernel_version}-dtbs.tar.gz
-          sudo cp ./deploy/${kernel_version}-modules.tar.gz ../kernelfile/${kernel_version}-modules.tar.gz
+          sudo cp ./deploy/${kernel_version}.zImage ./artifact/kernelfile/${kernel_version}.zImage
+          sudo cp ./deploy/${kernel_version}-dtbs.tar.gz ./artifact/kernelfile/${kernel_version}-dtbs.tar.gz
+          sudo cp ./deploy/${kernel_version}-modules.tar.gz ./artifact/kernelfile/${kernel_version}-modules.tar.gz
 
           cd ..
           rm -rf ./armv7-lpae-multiplatform
 
       - name: rootfs(Ubuntu-minimal) Preparation
         run: |
-          cd rootfs
+          cd ./artifact/rootfs
           wget -c https://rcn-ee.com/rootfs/eewiki/minfs/ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
           tar xf ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
           cd ..

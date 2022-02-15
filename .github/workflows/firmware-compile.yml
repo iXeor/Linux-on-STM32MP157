@@ -37,6 +37,8 @@ jobs:
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
           df -h
+          mkdir artifact
+          cd artifact
           
       - name: Path Clean
         run: |
@@ -64,15 +66,15 @@ jobs:
       - name: Path Init
         run: |
           if [ ! -d "bootloader" ];then
-            mkdir ./artifact/bootloader
+            mkdir bootloader
           fi
 
           if [ ! -d "kernelfile" ];then
-            mkdir ./artifact/kernelfile
+            mkdir kernelfile
           fi
 
           if [ ! -d "rootfs" ];then
-            mkdir ./artifact/rootfs
+            mkdir rootfs
           fi
           
       - name: U-Boot Compile
@@ -93,8 +95,8 @@ jobs:
           make DEVICE_TREE=stm32mp157a-dk1 all -j $(nproc)
 
 
-          cp ./u-boot-spl.stm32 ../artifact/bootloader/u-boot-spl.stm32
-          cp ./u-boot.img ../artifact/bootloader/u-boot.img
+          cp ./u-boot-spl.stm32 ../bootloader/u-boot-spl.stm32
+          cp ./u-boot.img ../bootloader/u-boot.img
 
           cd ..
           rm -rf u-boot
@@ -110,19 +112,38 @@ jobs:
 
           kernel_version=$(cat "$PWD/KERNEL/include/generated/utsrelease.h" | awk '{print $3}' | sed 's/\"//g' )
 
-          sudo cp ./deploy/${kernel_version}.zImage ../artifact/kernelfile/${kernel_version}.zImage
-          sudo cp ./deploy/${kernel_version}-dtbs.tar.gz ../artifact/kernelfile/${kernel_version}-dtbs.tar.gz
-          sudo cp ./deploy/${kernel_version}-modules.tar.gz ../artifact/kernelfile/${kernel_version}-modules.tar.gz
+          sudo cp ./deploy/${kernel_version}.zImage ../kernelfile/${kernel_version}.zImage
+          sudo cp ./deploy/${kernel_version}-dtbs.tar.gz ../kernelfile/${kernel_version}-dtbs.tar.gz
+          sudo cp ./deploy/${kernel_version}-modules.tar.gz ../kernelfile/${kernel_version}-modules.tar.gz
 
           cd ..
           rm -rf armv7-lpae-multiplatform
 
       - name: rootfs(Ubuntu-minimal) Preparation
         run: |
-          cd ./artifact/rootfs
+          cd rootfs
           wget -c https://rcn-ee.com/rootfs/eewiki/minfs/ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
           tar xf ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
           cd ..
+          cd ..
+
+      - name: Deliver U-Boot
+        uses: actions/upload-artifact@v2
+        with:
+          name: STM32MP157_bootloader
+          path: ./artifact/bootloader/
+
+      - name: Deliver Kernel
+        uses: actions/upload-artifact@v2
+        with:
+          name: STM32MP157_kernel
+          path: ./artifact/kernelfile/
+
+      - name: Deliver rootfs
+        uses: actions/upload-artifact@v2
+        with:
+          name: STM32MP157_rootfs
+          path: ./artifact/rootfs/
 
       - name: Upload release asset
         if: github.event == 'release'

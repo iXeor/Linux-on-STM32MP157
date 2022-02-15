@@ -71,8 +71,8 @@ jobs:
 
       - name: Copy U-Boot files
         run: |
-          cp ./u-boot-spl.stm32 ./artifact/bootloader/u-boot-spl.stm32
-          cp ./u-boot.img ./artifact/bootloader/u-boot.img
+          cp ./u-boot/u-boot-spl.stm32 ./artifact/bootloader/u-boot-spl.stm32
+          cp ./u-boot/u-boot.img ./artifact/bootloader/u-boot.img
 
           cd ..
           rm -rf ./u-boot

@@ -40,7 +40,6 @@ jobs:
           
       - name: Path Clean
         run: |
-          cd ./artifact
           
           if [ -f "u-boot" ];then
             rm -rf ./u-boot/*

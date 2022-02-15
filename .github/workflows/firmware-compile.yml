@@ -37,45 +37,29 @@ jobs:
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
           df -h
-          mkdir artifact
-          cd artifact
           
-      - name: Path Clean
+      - name: Generate artifact Path
         run: |
-          
-          if [ -f "u-boot" ];then
-            rm -rf ./u-boot/*
-          fi
-
-          if [ -f "armv7-lpae-multiplatform" ];then
-            rm -rf ./armv7-lpae-multiplatform/*
-          fi
-
-          if [ -f "bootloader" ];then
-            rm -rf ./bootloader/*
-          fi
-
-          if [ -f "kernelfile" ];then
-            rm -rf ./kernelfile/*
-          fi
-
-          if [ -f "rootfs" ];then
-            rm -rf ./rootfs/*
-          fi
+          mkdir ./artifact
+          sudo chmod 777 ./artifact
+          cd ./artifact
+          echo ${PWD}
           
       - name: Path Init
         run: |
           if [ ! -d "bootloader" ];then
-            mkdir bootloader
+            mkdir ./bootloader
           fi
 
           if [ ! -d "kernelfile" ];then
-            mkdir kernelfile
+            mkdir ./kernelfile
           fi
 
           if [ ! -d "rootfs" ];then
-            mkdir rootfs
+            mkdir ./rootfs
           fi
+          
+          ls -l
           
       - name: U-Boot Compile
         run: |
@@ -94,12 +78,13 @@ jobs:
           make stm32mp15_basic_defconfig
           make DEVICE_TREE=stm32mp157a-dk1 all -j $(nproc)
 
-
+      - name: Copy U-Boot files
+        run: |
           cp ./u-boot-spl.stm32 ../bootloader/u-boot-spl.stm32
           cp ./u-boot.img ../bootloader/u-boot.img
 
           cd ..
-          rm -rf u-boot
+          rm -rf ./u-boot
 
       - name: Kernel Compile
         run: |
@@ -111,13 +96,15 @@ jobs:
           ./build_kernel.sh
 
           kernel_version=$(cat "$PWD/KERNEL/include/generated/utsrelease.h" | awk '{print $3}' | sed 's/\"//g' )
-
+          
+      - name: Copy Kernel Files
+        run: |
           sudo cp ./deploy/${kernel_version}.zImage ../kernelfile/${kernel_version}.zImage
           sudo cp ./deploy/${kernel_version}-dtbs.tar.gz ../kernelfile/${kernel_version}-dtbs.tar.gz
           sudo cp ./deploy/${kernel_version}-modules.tar.gz ../kernelfile/${kernel_version}-modules.tar.gz
 
           cd ..
-          rm -rf armv7-lpae-multiplatform
+          rm -rf ./armv7-lpae-multiplatform
 
       - name: rootfs(Ubuntu-minimal) Preparation
         run: |

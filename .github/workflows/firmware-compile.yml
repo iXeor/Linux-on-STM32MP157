@@ -81,6 +81,31 @@ jobs:
           rm -rf ./u-boot
           ls -l
           
+      - name: Kernel Compile
+        run: |
+          export TERM=xterm
+          git clone https://github.com/RobertCNelson/armv7-lpae-multiplatform
+          cd armv7-lpae-multiplatform/
+          git checkout origin/v5.16.x -b tmp
+          sed -i '200,229s/make_menuconfig/echo \"CONFIGURE DONE!\"\n/' ./build_kernel.sh
+          ./build_kernel.sh
+
+          kernel_version=$(cat "$PWD/KERNEL/include/generated/utsrelease.h" | awk '{print $3}' | sed 's/\"//g' )
+          
+      - name: Copy Kernel Files
+        run: |
+          sudo cp ./armv7-lpae-multiplatform/deploy/${kernel_version}.zImage ./artifact/kernelfile/${kernel_version}.zImage
+          sudo cp ./armv7-lpae-multiplatform/deploy/${kernel_version}-dtbs.tar.gz ./artifact/kernelfile/${kernel_version}-dtbs.tar.gz
+          sudo cp ./armv7-lpae-multiplatform/deploy/${kernel_version}-modules.tar.gz ./artifact/kernelfile/${kernel_version}-modules.tar.gz
+
+          cd ..
+          rm -rf ./armv7-lpae-multiplatform
+
+      - name: rootfs(Ubuntu-minimal) Preparation
+        run: |
+          cd ./artifact/rootfs
+          wget -c https://rcn-ee.com/rootfs/eewiki/minfs/ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
+          tar -xvf ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz -C ./artifact/ubuntu-20.04.3-minimal-armhf-2021-12-20.tar
 
       - name: Deliver U-Boot
         uses: actions/upload-artifact@v2

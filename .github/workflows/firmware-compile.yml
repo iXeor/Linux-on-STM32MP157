@@ -90,10 +90,11 @@ jobs:
           sed -i '200,229s/make_menuconfig/echo \"CONFIGURE DONE!\"\n/' ./build_kernel.sh
           ./build_kernel.sh
 
-          kernel_version=$(cat "${PWD}/KERNEL/include/generated/utsrelease.h" | awk '{print $3}' | sed 's/\"//g' )
           
       - name: Copy Kernel Files
         run: |
+          kernel_version=$(cat "./armv7-lpae-multiplatform/KERNEL/include/generated/utsrelease.h" | awk '{print $3}' | sed 's/\"//g' )
+          
           sudo cp ./deploy/${kernel_version}.zImage ./artifact/kernelfile/${kernel_version}.zImage
           sudo cp ./deploy/${kernel_version}-dtbs.tar.gz ./artifact/kernelfile/${kernel_version}-dtbs.tar.gz
           sudo cp ./deploy/${kernel_version}-modules.tar.gz ./artifact/kernelfile/${kernel_version}-modules.tar.gz

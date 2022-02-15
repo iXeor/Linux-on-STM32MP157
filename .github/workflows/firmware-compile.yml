@@ -90,7 +90,7 @@ jobs:
           sed -i '200,229s/make_menuconfig/echo \"CONFIGURE DONE!\"\n/' ./build_kernel.sh
           ./build_kernel.sh
 
-          kernel_version=$(cat "$PWD/KERNEL/include/generated/utsrelease.h" | awk '{print $3}' | sed 's/\"//g' )
+          kernel_version=$(cat "./armv7-lpae-multiplatform/KERNEL/include/generated/utsrelease.h" | awk '{print $3}' | sed 's/\"//g' )
           
       - name: Copy Kernel Files
         run: |

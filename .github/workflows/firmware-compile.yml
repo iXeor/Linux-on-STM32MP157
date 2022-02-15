@@ -2,7 +2,7 @@ name: Firmwire-CI
 
 on:
   schedule:
-    - cron: 30 2 * * *
+    - cron: 30 22 * * *
   release:
     types: [published]
 
@@ -38,6 +38,8 @@ jobs:
           
       - name: Path Clean
         run: |
+          cd ./artifact
+          
           if [ -f "u-boot" ];then
             rm -rf ./u-boot/*
           fi
@@ -119,12 +121,13 @@ jobs:
           cd rootfs
           wget -c https://rcn-ee.com/rootfs/eewiki/minfs/ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
           tar xf ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
+          cd ..
 
       - name: Upload release asset
         if: github.event == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.YOURTOKEN }}
-          file: ./*
+          file: ./artifact/*
           tag: ${{ github.ref }}
           file_glob: true

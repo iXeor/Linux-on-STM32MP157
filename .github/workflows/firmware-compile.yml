@@ -104,9 +104,9 @@ jobs:
 
       - name: rootfs(Ubuntu-minimal) Preparation
         run: |
-          cd ./artifact/rootfs
+
           wget -c https://rcn-ee.com/rootfs/eewiki/minfs/ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz
-          tar -xvf ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz -C ./artifact/ubuntu-20.04.3-minimal-armhf-2021-12-20.tar
+          tar -xvf ./ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz -C ./artifact/rootfs
 
       - name: Deliver U-Boot
         uses: actions/upload-artifact@v2

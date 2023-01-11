@@ -28,7 +28,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo -E apt-get update
-          sudo -E apt-get -fy install bison flex swig lzop lzma libmpc-dev u-boot-tools libncurses5-dev build-essential asciidoc binutils bzip2 gawk gettext git libz-dev patch python3 unzip zlib1g-dev libc6-dev-i386 subversion uglifyjs p7zip p7zip-full msmtp libssl-dev texinfo lib32gcc-s1* libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf
+          sudo -E apt-get -fy install bison flex swig lzop lzma libmpc-dev u-boot-tools libncurses5-dev build-essential asciidoc binutils bzip2 gawk gettext git libz-dev patch python3 unzip zlib1g-dev libc6-dev-i386 subversion uglifyjs p7zip p7zip-full msmtp libssl-dev texinfo lib32gcc-s1 libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf
       
       - name: Generate artifact Path
         run: |

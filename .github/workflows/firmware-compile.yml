@@ -109,19 +109,19 @@ jobs:
           tar -xvf ./ubuntu-20.04.3-minimal-armhf-2021-12-20.tar.xz -C ./artifact/rootfs
 
       - name: Deliver U-Boot
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: STM32MP157_bootloader
           path: ./artifact/bootloader/
 
       - name: Deliver Kernel
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: STM32MP157_kernel
           path: ./artifact/kernelfile/
 
       - name: Deliver rootfs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: STM32MP157_rootfs
           path: ./artifact/rootfs/
